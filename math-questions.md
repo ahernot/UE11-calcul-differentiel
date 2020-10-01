@@ -27,3 +27,28 @@ $$
 Comment interpréter géométriquement le terme $p(x_1,x_2)$ ?
 <br><br>
 <b>IDÉE :</b>
+tbc
+
+
+
+
+<br><br><br><br><br><br><br><br>
+#### <b>Question 5</b>
+L'application à laquelle nous destinons la fonction `Newton` demande-t'elle une grande précision ?
+Choisir une valeur de `eps` qui semble raisonnable et justifier l'ordre de grandeur choisi.
+
+Choix de $\varepsilon$ : __PLACEHOLDER__
+Justification : __PLACEHOLDER__
+
+<br><br>
+
+#### Tâche 2
+
+Testez votre implémentation de la fonction `Newton` ! On suggère par exemple de l'utiliser pour chercher un point $(x_1, x_2)$ de la ligne de niveau $0.8$ de $f_1$ (cf. Exemples de référence) qui vérifie en outre $x_1 = x_2$ en utilisant le point initial $(0.8, 0.8)$. Puis de faire varier le point initial, la contrainte supplémentaire, etc. et de représenter graphiquement les résultats.
+
+__TO PROGRAM__
+
+
+
+
+
