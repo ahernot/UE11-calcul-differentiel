@@ -10,7 +10,7 @@ import autograd.numpy as np
 
 #   GLOBAL VARIABLES
 eps = 10**-4
-N = 100
+N = 10**4
 
 
 
@@ -55,7 +55,6 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
     while True:
 
         #<--- to fill --->#
-        #THIS DOESN'T WORK YET, LOL
         
         #   2.1. Generating the gradient of F (n-dimensional derivative)
         gradF = DFunc.grad(F)
@@ -64,13 +63,14 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
         gradF_appl = gradF(x0,y0)
 
         #   2.3. Calculating new coordinates for a better approximation of the solution
-        x = x0 - F(x0, y0) / gradF_appl[0]
-        y = y0 - F(x0, y0) / gradF_appl[1]
+        x = x0 - F(x0, y0) / gradF_appl[0]  # x_k+1 = x_k - [ d_x( f(x_k, y) ) ]^-1 / f(x_k, y)
+        y = y0 - F(x, y0) / gradF(x,y0)[1]#gradF_appl[1]
 
-        print(x, y)
+        ###print('\t', x, y)
 
         #   2.4. Breaking the loop and returning the solution when the precision condition (with eps) is met
         if np.sqrt((x - x0)**2 + (y - y0)**2) <= eps:
+            print(f'Solution found for (x,y) = {(x, y)}, with value F(x,y) = {F(x, y)}')
             return x, y
         
         #   2.5. Setting the values for the next iteration
@@ -78,19 +78,20 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
 
         #   2.6. Incrementing the iteration counter
         iter_counter += 1
+
+        #   2.7. Breaking the loop when the max number of iterations is reached
+        if iter_counter >= N:
+            break
     
 
     #   3. Raising an error when no solution is found and the max number of iterations is exceeded
     raise ValueError(f'No convergence in {N} steps.')
 
 
-def F(x, y):
+def f0(x, y):
     return x + y
 
-val = Newton(F, -1, -1)
-print(val)
+def f1(x1, x2):
+    return 3.0 * x1 * x1 - 2.0 * x1 * x2 + 3.0 * x2 * x2
 
-
-
-
-
+val = Newton(f1, 0.8, 0.8)
