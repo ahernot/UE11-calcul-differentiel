@@ -53,8 +53,6 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
 
     #   2. Running the method in a loop to refine the calculation
     while True:
-
-        #<--- to fill --->#
         
         #   2.1. Generating the gradient of F (n-dimensional derivative)
         gradF = DFunc.grad(F)
