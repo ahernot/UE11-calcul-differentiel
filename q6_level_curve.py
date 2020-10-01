@@ -8,13 +8,13 @@ import autograd.numpy as np
 #from IPython.display import display
 
 
+#   OTHER IMPORTS
+from q4_newton import Newton
+
+
 #   GLOBAL VARIABLES
 eps = 10**-6
 N = 10**4
-
-
-from q4_newton import Newton
-
 
 
 

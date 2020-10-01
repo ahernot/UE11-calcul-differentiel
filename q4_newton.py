@@ -85,7 +85,7 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
     #   3. Raising an error when no solution is found and the max number of iterations is exceeded
     raise ValueError(f'No convergence in {N} steps.')
 
-
+"""
 def f0(x, y):
     return x + y
 
@@ -93,3 +93,4 @@ def f1(x1, x2):
     return 3.0 * x1 * x1 - 2.0 * x1 * x2 + 3.0 * x2 * x2
 
 val = Newton(f1, 0.8, 0.8)
+"""
