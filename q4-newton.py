@@ -9,7 +9,7 @@ import autograd.numpy as np
 
 
 #   GLOBAL VARIABLES
-eps = 10**-4
+eps = 10**-6
 N = 10**4
 
 
@@ -59,18 +59,18 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
         #   2.1. Generating the gradient of F (n-dimensional derivative)
         gradF = DFunc.grad(F)
 
-        #   2.2. Getting the value of the gradient of F at point (x0,y0)
-        gradF_appl = gradF(x0,y0)
-
-        #   2.3. Calculating new coordinates for a better approximation of the solution
-        x = x0 - F(x0, y0) / gradF_appl[0]  # x_k+1 = x_k - [ d_x( f(x_k, y) ) ]^-1 / f(x_k, y)
-        y = y0 - F(x, y0) / gradF(x,y0)[1]#gradF_appl[1]
-
-        ###print('\t', x, y)
+        #   2.2.1. Getting the value of the gradient of F at point (x0,y0)
+        gradF_appl1 = gradF(x0,y0)
+        #   2.2.2. Calculating new x-coordinate for a better approximation of the solution | x_k+1 = x_k - [ d_x( f(x_k, y) ) ]^-1 / f(x_k, y)
+        x = x0 - F(x0, y0) / gradF_appl1[0]
+        #   2.2.3. Getting the value of the gradient of F at point(x,y0)
+        gradF_appl2 = gradF(x,y0)
+        #   2.2.4. Calculating the new y-coordinate for a better approximation of the solution | x_k+1 = x_k - [ d_x( f(x_k, y) ) ]^-1 / f(x_k, y)
+        y = y0 - F(x, y0) / gradF_appl2[1]
 
         #   2.4. Breaking the loop and returning the solution when the precision condition (with eps) is met
         if np.sqrt((x - x0)**2 + (y - y0)**2) <= eps:
-            print(f'Solution found for (x,y) = {(x, y)}, with value F(x,y) = {F(x, y)}')
+            print(f'Solution found for (x,y) = {(x, y)}, with value F(x,y) = {F(x, y)}\nIterations required for calculation: {iter_counter} / {N} ({round(iter_counter/N*100, 1)}%)') # DEBUG
             return x, y
         
         #   2.5. Setting the values for the next iteration
