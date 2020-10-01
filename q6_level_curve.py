@@ -20,7 +20,7 @@ N = 10**4
 
 
 #   FUNCTIONS
-def level_curve(f:Callable, x0:float, y0:float, delta:float=0.1, N:int=1000, eps:float=eps):
+def level_curve(f:Callable, x0:float, y0:float, delta:float=0.1, N:int=100, eps:float=eps):
 
     """
     This function solves the equation F(x,y) = 0 around (x0,y0) using the Newton algorithm.
@@ -28,17 +28,62 @@ def level_curve(f:Callable, x0:float, y0:float, delta:float=0.1, N:int=1000, eps
     :param f: The function to solve for
     :param x0: The initial x-axis coordinate
     :param y0: The initial y-axis coordinate
+    :param delta: The requested distance between the initial point and the solution
     :param eps: The acceptable precision of the algorithm
-    :param N: The maximum number of iterations (will raise an error if exceeded)
+    :param N: The number of points to plot on the level line
 
-    :returns: The solution to the equation F(x,y) = 0, to a precision of eps
+    :returns: ???
     """
+
+    #   1. On génère le cercle de rayon delta et de centre (x0, y0) et on cherche son intersection avec la ligne de niveau
+
+    X, Y = x0, y0
+
+
+    def generate_circle(xc:float, yc:float, radius:float):
+        """
+        This function generates a circle function.
+        :param xc: The x-axis coordinate of the circle's center
+        :param yc: The y-axis coordinate of the circle's center
+        :param radius: The radius of the circle
+        :returns: The circle function
+        """
+
+        def circle(angle:float) -> tuple:
+            """
+            This function generates a point on the circle given an angle from the x-axis (anti-clockwise, in radians).
+            :param angle: The angle from the x-axis, in radians
+            :retuns: The coordinates of the point on the circle
+            """
+            return (xc + radius * np.cos(angle), yc + radius * np.sin(angle)) #this is easier to understand with a simple drawing
+        
+        return circle
+
+
+
+    for point_nb in range(N):
+        
+        new_circle = generate_circle(X, Y)
+
+        # now we look for the angles so that f(circle) = c : 1-dim Newton...
+
+
+
+
+
+        #on raisonne avec les angles
+
+        
+
+
+        
+
 
 
 def f0(x, y):
     return x + y
 
 def f1(x1, x2):
-    return 3.0 * x1 * x1 - 2.0 * x1 * x2 + 3.0 * x2 * x2
+    return 3.0 * x1 * x1 - 2.0 * x1 * x2 + 3.0 * x2 * x2 - 0.8
 
 val = Newton(f1, 0.8, 0.8)
