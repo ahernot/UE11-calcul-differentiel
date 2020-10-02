@@ -71,19 +71,4 @@ def level_curve(f:Callable, x0:float, y0:float, delta:float=0.1, N:int=100, eps:
 
 
 
-        #on raisonne avec les angles
-
-        
-
-
-        
-
-
-
-def f0(x, y):
-    return x + y
-
-def f1(x1, x2):
-    return 3.0 * x1 * x1 - 2.0 * x1 * x2 + 3.0 * x2 * x2 - 0.8
-
-val = Newton(f1, 0.8, 0.8)
+        #on raisonne avec les angles??

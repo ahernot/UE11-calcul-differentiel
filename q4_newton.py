@@ -31,7 +31,7 @@ DFunc = DiffFunctions()
 
 
 #   FUNCTIONS
-def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
+def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N, debug:bool=False) -> tuple:
 
     """
     This function solves the equation F(x,y) = 0 around (x0,y0) using the Newton algorithm.
@@ -68,7 +68,7 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
 
         #   2.3. Breaking the loop and returning the solution when the precision condition (with eps) is met
         if np.sqrt((x - x0)**2 + (y - y0)**2) <= eps:
-            print(f'Solution found for (x,y) = {(x, y)}, with value F(x,y) = {F(x, y)}\nIterations required for calculation: {iter_counter} / {N} ({round(iter_counter/N*100, 1)}%)') # DEBUG
+            if debug: print(f'Solution found for (x,y) = {(x, y)}, with value F(x,y) = {F(x, y)}\nIterations required for calculation: {iter_counter} / {N} ({round(iter_counter/N*100, 1)}%)') # DEBUG
             return x, y
         
         #   2.4. Setting the values for the next iteration
