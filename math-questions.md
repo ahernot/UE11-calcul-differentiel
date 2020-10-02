@@ -1,4 +1,4 @@
-#### <b>Question 1</b>
+### <b>Question 1</b>
 
 Soit $c \in \mathbb{R}$.
 On suppose que la fonction $f:\mathbb{R}^2 \to \mathbb{R}$ est continue et vérifie
@@ -10,11 +10,16 @@ Que peut-on dire de l'ensemble de niveau $c$ de $f$ ?
 On définit l'ensemble de niveau $c$ :<br>
 $$\mathrm{LVL}(c) = \left\{ (x_1, x_2) \mid f(x_1,x_2) = c \right\}$$
 
-Montrons que l'ensemble de niveau $c$ de $f$ est vide ou borné. (???)<br>
+Montrons que l'ensemble de niveau $c$ de $f$ est borné. (???)<br>
 $f(x_1,x_2) \xrightarrow[\|(x_1,x_2)\| \to +\infty]{} +\infty$. Alors $\exists M(c) > 0, \ \|(x_1,x_2)\| \geq M(c) \ \Rightarrow \ f(x_1,x_2) > c$.<br>
 Donc $\mathrm{LVL}(c) \subset \left\{(x_1, x_2) \mid \|(x_1,x_2)\| < M(c) \right\} = E_M(c)$, un ensemble borné.
 
-Montrer que $f$ admet forcément un minimum sur $E_M(c)$. Si ce min est >≠ c, alors LVL(c) est $\emptyset$.
+Montrons que l'ensemble de niveau $c$ de $f$ est fermé
+
+=> dans $\mathbb{R}^n$, c'est un compact (???).
+
+
+???? Montrer que $f$ admet forcément un minimum sur $E_M(c)$. Si ce min est >≠ c, alors LVL(c) est $\emptyset$.
 
 <br><br><br>
 
@@ -23,7 +28,16 @@ $$
 p(x_1, x_2) := \frac{\partial_2 f(x_0)}{\|\nabla f(x_0)\|} (x_1 - x_{10}) -
 \frac{\partial_1 f(x_0)}{\|\nabla f(x_0)\|} (x_2 - x_{20}).
 $$
-#### <b>Question 2</b>
+
+<br>
+ie, en changeant légèrement les notations :
+<br>
+
+$$
+p(x, y) = \frac{1}{\| \nabla f(X_0) \|} \left( \frac{\partial f}{\partial y}(X_0) (x - x_0) - \frac{\partial f}{\partial x}(X_0) (y - y_0) \right)
+$$
+
+### <b>Question 2</b>
 Comment interpréter géométriquement le terme $p(x_1,x_2)$ ?
 <br><br>
 <b>IDÉE :</b>
@@ -33,8 +47,8 @@ tbc
 
 
 <br><br><br><br><br><br><br><br>
-#### <b>Question 5</b>
-L'application à laquelle nous destinons la fonction `Newton` demande-t'elle une grande précision ?
+### <b>Question 5</b>
+L'application à laquelle nous destinons la fonction `Newton` demande-t-elle une grande précision ?
 Choisir une valeur de `eps` qui semble raisonnable et justifier l'ordre de grandeur choisi.
 
 Choix de $\varepsilon$ : __PLACEHOLDER__
