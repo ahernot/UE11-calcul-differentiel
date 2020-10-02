@@ -37,6 +37,31 @@ $$
 p(x, y) = \frac{1}{\| \nabla f(X_0) \|} \left( \frac{\partial f}{\partial y}(X_0) (x - x_0) - \frac{\partial f}{\partial x}(X_0) (y - y_0) \right)
 $$
 
+
+ie la proportion du gradient suivant y * ∆x - la proportion du gradiant suivant x * ∆y
+
+ie
+
+$$
+p(x, y) = 
+
+\begin{vmatrix}
+\text{prop grad}\ y & \Delta y
+\\
+\text{prop grad}\ x & \Delta x
+\end{vmatrix}
+
+=
+
+\frac{1}{\| \nabla f(X_0) \|}
+
+\begin{vmatrix}
+\partial_y f (x_0, y_0) & y-y_0
+\\
+\partial_x f (x_0, y_0) & x-x_0
+\end{vmatrix}
+$$
+
 ### <b>Question 2</b>
 Comment interpréter géométriquement le terme $p(x_1,x_2)$ ?
 <br><br>
