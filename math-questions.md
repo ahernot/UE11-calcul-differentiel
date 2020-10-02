@@ -30,7 +30,18 @@ p(x_1, x_2) := \frac{\partial_2 f(x_0)}{\|\nabla f(x_0)\|} (x_1 - x_{10}) -
 $$
 
 <br>
-ie, en changeant légèrement les notations :
+
+
+### <b>Question 2</b>
+Comment interpréter géométriquement le terme $p(x_1,x_2)$ ?
+<br><br>
+<b>IDÉE :</b>
+Ça semble être une sorte d'indicateur de ??????????
+
+C'est un plan
+
+<br><br><br>
+En changeant légèrement les notations :
 <br>
 
 $$
@@ -40,21 +51,18 @@ $$
 
 ie la proportion du gradient suivant y * ∆x - la proportion du gradient suivant x * ∆y
 
-ie
+ie :
 
 $$
-p(x, y) = 
-
+p(x, y)
+= 
 \begin{vmatrix}
 \text{prop grad}\ y & \Delta y
 \\
 \text{prop grad}\ x & \Delta x
 \end{vmatrix}
-
 =
-
 \frac{1}{\| \nabla f(X_0) \|}
-
 \begin{vmatrix}
 \partial_y f (x_0, y_0) & y-y_0
 \\
@@ -62,11 +70,13 @@ p(x, y) =
 \end{vmatrix}
 $$
 
-### <b>Question 2</b>
-Comment interpréter géométriquement le terme $p(x_1,x_2)$ ?
-<br><br>
-<b>IDÉE :</b>
-Ça semble être une sorte d'indicateur de ??????????
+Notons $K_\mathrm{grad} = \frac{1}{\| \nabla f(X_0) \|}$.
+
+$p(x_0, y_0) = 0$
+
+$p_{y_0} : x \mapsto p(x, y_0) = \partial_y f (x_0, y_0) K_\mathrm{grad} \cdot (x-x_0)$ est une fonction affine
+
+$p_{x_0} : y \mapsto p(x_0, y) = - \partial_x f (x_0, y_0) K_\mathrm{grad} \cdot (y-y_0)$ est une fonction affine
 
 
 
