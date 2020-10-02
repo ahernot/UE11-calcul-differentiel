@@ -38,7 +38,7 @@ p(x, y) = \frac{1}{\| \nabla f(X_0) \|} \left( \frac{\partial f}{\partial y}(X_0
 $$
 
 
-ie la proportion du gradient suivant y * ∆x - la proportion du gradiant suivant x * ∆y
+ie la proportion du gradient suivant y * ∆x - la proportion du gradient suivant x * ∆y
 
 ie
 
@@ -66,8 +66,7 @@ $$
 Comment interpréter géométriquement le terme $p(x_1,x_2)$ ?
 <br><br>
 <b>IDÉE :</b>
-tbc
-
+Ça semble être une sorte d'indicateur de ??????????
 
 
 
