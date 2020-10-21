@@ -125,16 +125,50 @@ def level_curve(f:Callable, x0, y0, delta=0.1, eps=eps, N=100):
     return contour
 
 
-contour = level_curve(f1, xf, yf)
-plt.scatter(contour[0, :], contour[1, :])
-plt.show()
+
+
+
+
+
+
+####################
+
+
+def check_intersection(segment_1_1:tuple, segment_1_2:tuple, segment_2_1:tuple, segment_2_2:tuple) -> tuple or None:
+
+    #   Unpacking the variables for the first segment
+    x_1, y_1 = segment_1_1
+    x_2, y_2 = segment_1_2
+    if x_1 > x_2:  x_1, y_1, x_2, y_2 = x_2, y_2, x_1, y_1
+
+    #   Unpacking the variables for the second segment
+    x_3, y_3 = segment_2_1
+    x_4, y_4 = segment_2_2
+    if x_3 > x_4:  x_3, y_3, x_4, y_4 = x_4, y_4, x_3, y_3
+
+    #   Calculating the gradients
+    delta_1 = (y_2 - y_1) / (x_2 - x_1)
+    delta_2 = (y_4 - y_3) / (x_4 - x_3)
+
+    #   Analytical resolution to find the possible intersection of the infinite lines
+    x = ((x_1 * delta_1 - y_1) - (x_3 * delta_2 - y_3)) / (delta_1 - delta_2) # résolution analytique
+
+    #   Condition for intersection of the SEGMENTS
+    if x_1 <= x <= x_2 and x_3 <= x <= x_4:
+        #y = delta_1 * (x - x_1) + y_1
+        #return x, y
+        return True
+
+    return False
 
 
 
 # Task x
-def level_curve_1(f:Callable, x0, y0, delta=0.1, eps=eps):
-    contour = numpy.zeros( (2, N) )
-    contour[0, 0], contour[1, 0] = x0, y0
+def level_curve_1(f:Callable, x0, y0, delta=0.1, eps=eps) -> list:
+    overlaps = 0 # overlap counter
+    overlaps_to_break = 1 # 2 # number of overlaps required to break the loop
+
+    contour = [(x0, y0)]
     xi, yi = x0, y0
 
     while True:
@@ -153,17 +187,35 @@ def level_curve_1(f:Callable, x0, y0, delta=0.1, eps=eps):
         yf = yi + tang[1]
         xf, yf = Newton(F, xf, yf, eps, N)
 
-        contour[:, i] = [xf, yf]
+
+        #   Adding the next calculated point to the contour
+        contour.append((xf, yf))
 
 
+        #   Check if intersects with first segment
+        if len(contour) > 2:
+            intersects = check_intersection(contour[0], contour[1], contour[-2], contour[-1]) ## to implement directly because doesn't need to re-compute the first segment every time
 
-        #   Check if
+            if intersects:
+                overlaps += 1
+            else:
+                overlaps = 0
 
-
-
+        if overlaps >= overlaps_to_break:
+            break
 
         xi, yi = xf, yf
 
+
     return contour
 
-# 3 intersections successives = BREAK final?
+
+
+
+
+contour = level_curve_1(f1, xf, yf)
+x_contour_list = [point_tuple[0] for point_tuple in contour]
+y_contour_list = [point_tuple[1] for point_tuple in contour]
+
+plt.scatter(x_contour_list, y_contour_list)
+plt.show()
