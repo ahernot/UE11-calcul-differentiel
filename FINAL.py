@@ -83,7 +83,11 @@ def F(x, y):
 xf, yf = Newton(F, 0.8, 0.8)
 print((xf, yf))
 
-# A terminer avec pleins d'essais
+# À terminer avec pleins d'essais
+
+
+
+
 
 display_contour(
     f1,
@@ -93,8 +97,10 @@ display_contour(
 )
 
 
+
+
 # Task 3
-def level_curve(f, x0, y0, delta=0.1, eps=eps, N=100):
+def level_curve(f:Callable, x0, y0, delta=0.1, eps=eps, N=100):
     contour = numpy.zeros((2, N))
     contour[0, 0], contour[1, 0] = x0, y0
     xi, yi = x0, y0
@@ -122,3 +128,42 @@ def level_curve(f, x0, y0, delta=0.1, eps=eps, N=100):
 contour = level_curve(f1, xf, yf)
 plt.scatter(contour[0, :], contour[1, :])
 plt.show()
+
+
+
+# Task x
+def level_curve_1(f:Callable, x0, y0, delta=0.1, eps=eps):
+    contour = numpy.zeros( (2, N) )
+    contour[0, 0], contour[1, 0] = x0, y0
+    xi, yi = x0, y0
+
+    while True:
+
+        def F(x:float, y:float) -> numpy.ndarray: #change to have inline argument *[x, y] with numpy???????
+            dist = (x - xi) ** 2 + (y - yi) ** 2
+            return np.array([f1(x, y) - c, dist - delta ** 2])
+
+        delta1_f = grad(f)(xi, yi)[0]
+        delta2_f = grad(f)(xi, yi)[1]
+
+        tang = (np.array([delta2_f, -delta1_f]) / numpy.sqrt(
+            delta1_f ** 2 + delta2_f ** 2)) * delta  # Vecteur tangent de départ
+
+        xf = xi + tang[0]
+        yf = yi + tang[1]
+        xf, yf = Newton(F, xf, yf, eps, N)
+
+        contour[:, i] = [xf, yf]
+
+
+
+        #   Check if
+
+
+
+
+        xi, yi = xf, yf
+
+    return contour
+
+# 3 intersections successives = BREAK final?
