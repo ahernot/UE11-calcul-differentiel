@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from IPython.display import display
 
 
+"""
+
 # Display monitoring
 def display_contour(f, x, y, levels):
     X, Y = numpy.meshgrid(x, y)
@@ -208,14 +210,57 @@ def level_curve_1(f:Callable, x0, y0, delta=0.1, eps=eps) -> list:
 
 
     return contour
+"""
 
 
 
 
 
-contour = level_curve_1(f1, xf, yf)
-x_contour_list = [point_tuple[0] for point_tuple in contour]
-y_contour_list = [point_tuple[1] for point_tuple in contour]
 
-plt.scatter(x_contour_list, y_contour_list)
+
+
+
+
+
+
+def gamma(t, P1:tuple, P2:tuple, u1:tuple, u2:tuple) -> tuple:
+
+    x1, x2 = P1
+    y1, y2 = P2
+
+    u11, u12 = u1
+    u21, u22 = u2
+
+    a = x1
+    d = y1
+    #condition si u12 ou u22 = 0
+
+    # et, par résolution du système linéaire :
+    e = ((2*y2 - 2*y1)*(u21/u22) + 2*(x2-x1)) / (3*u11/u12 + u21/u22) #refaire le calcul, au cas où
+    b = e * u11 / u12
+    c = x2 - x1 - b
+    f = y2 - y1 - e
+
+    x = a + b * t + c * t ** 2
+    y = d + e * t + f * t ** 2
+
+    return (x, y)
+
+
+###
+t = numpy.linspace(0, 1, 100)
+
+
+ff = gamma(
+    t,
+    P1 = (0, 0),
+    P2 = (5, 5),
+    u1 = (3*(10**-0.5), 1*(10**-0.5)),
+    u2 = (3*(34**-0.5), -5*(34**-0.5))
+)
+
+print(ff)
+
+plt.figure()
+plt.scatter([x for x in ff[0]], [y for y in ff[1]])
 plt.show()
