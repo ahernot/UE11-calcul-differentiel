@@ -9,10 +9,10 @@ import matplotlib.pyplot as plt
 from IPython.display import display
 
 
-"""
+
 
 # Display monitoring
-def display_contour(f, x, y, levels):
+def display_contour(f: Callable, x: float or int, y: float or int, levels):
     X, Y = numpy.meshgrid(x, y)
     Z = f(X, Y)
     fig, ax = plt.subplots()
@@ -47,6 +47,10 @@ def J(f):
     return J_f
 
 
+
+
+
+
 # Parameters
 N = 100
 eps = 10 ** (-3)  # A justifier avec fin Calcul diff II (nb flottants & erreurs)
@@ -54,23 +58,43 @@ c = 0.8
 
 
 # Task 1
-def Newton(F, x0, y0, eps=eps, N=N):  # A vectoriser
+def Newton(f:Callable, x0:float or int, y0:float or int, eps:float or int=eps, N:int=N):
+    """
+    This function...
+    :param f:
+    :param x0:
+    :param y0:
+    :param eps:
+    :param N: Maximum number of iterations
+    :return:
+    """
 
-    J_F = J(F)
+    #   1. Calcul de la matrice jacobienne de F
+    Jf = J(f)
 
     for i in range(N):
 
-        J_Finv = numpy.linalg.inv(J_F(x0, y0))
-        # Application formule de récurrence
-        x = x0 - numpy.dot(J_Finv, np.array([F(x0, y0)[0], F(x0, y0)[1]]))[0]
-        y = y0 - numpy.dot(J_Finv, np.array([F(x0, y0)[0], F(x0, y0)[1]]))[1]
+        #   2.1. Inversion de la matrice jacobienne
+        Jf_inv = numpy.linalg.inv( Jf(x0, y0) )
+        f0 = f(x0, y0)
 
+        #   2.2. Application de la formule de récurrence (Newton)
+        f_dot = numpy.dot( Jf_inv, np.array([f0[0], f0[1]]) )
+        #   2.3.
+        x = x0 - f_dot[0]
+        y = y0 - f_dot[1]
+
+        #   2.4. Exiting the function once the desired precision is reached
         if numpy.sqrt((x - x0) ** 2 + (y - y0) ** 2) <= eps:
             return x, y
 
         x0, y0 = x, y
+
     else:
-        raise ValueError(f"no convergence in {N} steps.")
+        raise ValueError(f'No convergence in {N} steps.')
+
+
+
 
 
 # Task 2
@@ -84,7 +108,6 @@ def F(x, y):
 
 xf, yf = Newton(F, 0.8, 0.8)
 print((xf, yf))
-
 # À terminer avec pleins d'essais
 
 
@@ -179,8 +202,12 @@ def level_curve_1(f:Callable, x0, y0, delta=0.1, eps=eps) -> list:
             dist = (x - xi) ** 2 + (y - yi) ** 2
             return np.array([f1(x, y) - c, dist - delta ** 2])
 
-        delta1_f = grad(f)(xi, yi)[0]
-        delta2_f = grad(f)(xi, yi)[1]
+
+
+        delta_f = grad(f)(xi, yi)
+        delta_f = grad(f)(xi, yi)
+
+        grad_f = numpy.dot( grad(f)(xi, yi) , numpy.array([1, -1]))
 
         tang = (np.array([delta2_f, -delta1_f]) / numpy.sqrt(
             delta1_f ** 2 + delta2_f ** 2)) * delta  # Vecteur tangent de départ
@@ -210,19 +237,10 @@ def level_curve_1(f:Callable, x0, y0, delta=0.1, eps=eps) -> list:
 
 
     return contour
+
+
+
 """
-
-
-
-
-
-
-
-
-
-
-
-
 def gamma(t, P1:tuple, P2:tuple, u1:tuple, u2:tuple) -> tuple:
 
     x1, x2 = P1
@@ -245,12 +263,12 @@ def gamma(t, P1:tuple, P2:tuple, u1:tuple, u2:tuple) -> tuple:
     y = d + e * t + f * t ** 2
 
     return (x, y)
-
+"""
 
 ###
 t = numpy.linspace(0, 1, 100)
 
-
+"""
 ff = gamma(
     t,
     P1 = (0, 0),
@@ -258,9 +276,9 @@ ff = gamma(
     u1 = (3*(10**-0.5), 1*(10**-0.5)),
     u2 = (3*(34**-0.5), -5*(34**-0.5))
 )
+"""
 
-print(ff)
 
 plt.figure()
-plt.scatter([x for x in ff[0]], [y for y in ff[1]])
+plt.scatter([x for x in contour[0]], [y for y in contour[1]])
 plt.show()

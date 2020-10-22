@@ -182,14 +182,31 @@ def check_intersection(segment_1_1:tuple, segment_1_2:tuple, segment_2_1:tuple, 
     delta_1 = (y_2 - y_1) / (x_2 - x_1)
     delta_2 = (y_4 - y_3) / (x_4 - x_3)
 
+    #   Checking if parallel
+    if delta_1 == delta_2:
+        y0_1 = y_1 - x_1 * delta_1
+        y0_2 = y_3 - x_3 * delta_2
+
+        #   Parallel and overlapping
+        if y0_1 == y0_2:
+            return True
+
+        #   Parallel and distinct
+        else: #statement not needed
+            return False
+        
+
     #   Analytical resolution to find the possible intersection of the infinite lines
     x = ((x_1 * delta_1 - y_1) - (x_3 * delta_2 - y_3)) / (delta_1 - delta_2) # résolution analytique
 
     #   Condition for intersection of the SEGMENTS
     if x_1 <= x <= x_2 and x_3 <= x <= x_4:
-        return x
+        # y = delta_1 * (x - x_1) + y_1
+        # return x, y
+        return True
 
-    return None
+    return False
+
 
 
 x = check_intersection(
