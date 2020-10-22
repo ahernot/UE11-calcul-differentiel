@@ -1,0 +1,23 @@
+%QUESTION 1
+
+La fonction $f:\mathbb{R}^2 \to \mathbb{R}$ est continue et $\{c\}$ est un fermé donc \underline{$\mathrm f^{-1}(c)$ est fermé}.
+
+Par ailleurs, on a $f(x_1, x_2) \to +\infty$ quand $\|(x_1,x_2)\| \to +\infty$ donc :
+
+$$\forall A \in \mathbb{R}, \exists (x_1, x_2) \in \mathbb{R}^2 \mid \forall (y_1, y_2) \in \mathbb{R}^2, \|(y_1, y_2)\| > \|(x_1, x_2)\| \Longrightarrow f(y_1, y_2) > A$$
+
+Ainsi si on choisit $A = c$, il existe un point $(x_1, x_2)$ de sorte que $\forall (y_1, y_2) \in \mathbb{R}^2, \|(y_1, y_2)\| > \|(x_1, x_2)\| \Longrightarrow f(y_1, y_2) > c$
+donc $\mathrm f^{-1}(c) \subset \left\{(y_1, y_2) \in \mathbb{R}^2 \mid \|(y_1,y_2)\| < \|(x_1,x_2)\| \right \}$ qui est un ensemble borné et donc \underline{$\mathrm f^{-1}(c)$ l'est aussi}.
+
+Enfin, comme on se trouve en dimension finie $\mathrm f^{-1}(c)$ est un \underline{compact} et c'est un fermé de $\mathbb{R}^2$ donc c'est aussi \underline{un ensemble complet} (important pour la convergence de la méthode de Newton).
+
+%QUESTION 2
+
+On remarque que :
+$$p(x_1, x_2) := \frac{\partial_2 f(x_0)}{\|\nabla f(x_0)\|} (x_1 - x_{10}) -
+\frac{\partial_1 f(x_0)}{\|\nabla f(x_0)\|} (x_2 - x_{20}) = 
+\begin{matrix}
+\frac{\partial_1 f(x_0)} \\
+-\frac{\partial_2 f(x_0)}
+\end{matrix}
+$$
