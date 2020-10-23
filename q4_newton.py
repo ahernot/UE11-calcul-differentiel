@@ -1,7 +1,7 @@
 #   THIRD-PARTY LIBRARIES
 from typing import Callable
 
-import numpy as np # importing the NumPy functions which are not overwritten by AutoGrad.NumPy
+import numpy as npy # importing the NumPy functions which are not overwritten by AutoGrad.NumPy
 
 import autograd
 import autograd.numpy as np
@@ -33,7 +33,7 @@ class DiffFunctions():
         j = autograd.jacobian
         def J_f(x, y):
             x, y = float(x), float(y) # troubleshooting types (ugly)
-            return np.array([j(f, 0)(x, y), j(f, 1)(x, y)]).T
+            return np.array([ j(f, 0)(x, y) , j(f, 1)(x, y) ]) .T
         return J_f
 
 
@@ -124,16 +124,17 @@ def newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N, debug:bool=Fa
     while True:
 
         #   4.1. Inverting F's jacobian matrix
-        jacF_inv = np.linalg.inv( jacF( *(X0.tolist()) ) )
+        try: jacF_inv = npy.linalg.inv( jacF( *(X0.tolist()) ) )
+        except npy.linalg.linalg.LinAlgError: print('Error encountered: the JacF matrix is singular.')
 
         #   4.2. xxx (F returns a np.ndarray type)
-        F_dot = np.dot( jacF_inv, F( *(X0.tolist()) ) )
+        F_dot = npy.dot( jacF_inv, F( *(X0.tolist()) ) )
 
         #   4.3. Computing the new X point
         X = X0 - F_dot
 
         #   4.4. Exiting the function once the desired precision is reached
-        if np.linalg.norm( X - X0 ) <= eps:
+        if npy.linalg.norm( X - X0 ) <= eps:
             if debug: print(f'Solution found for (x,y) = {tuple(X.tolist())}, with value f(x,y) = {F(*(X.tolist()))[0]}\nIterations required for calculation: {iter_counter} / {N} ({round(iter_counter / N * 100, 1)}%)')  # DEBUG
             return X
 
@@ -167,8 +168,6 @@ def F(x: float or int, y: float or int) -> np.ndarray:
 
 
 val = newton(F, 0.8, 0.8)
-
-
 print(val)
 
 
@@ -178,7 +177,7 @@ print(val)
 def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or int=0.1, eps: float or int=eps, N: int=100) -> np.ndarray:
 
     #   1. Initialising the contour
-    contour = np.empty((2, N))
+    contour = npy.empty((2, N))
     X0 = np.array([x0, y0])
     contour[:, 0] = X0
 
@@ -194,7 +193,7 @@ def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or 
         def F(x, y):
             X = np.array([x, y])
 
-            dist = np.linalg.norm( X - Xi )
+            dist = npy.linalg.norm( X - Xi )
             condition = dist - delta ** 2
 
             return np.array([f1(x, y) - c, condition])
@@ -202,7 +201,7 @@ def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or 
         #   2.2.1. Computing a tangent vector to the curve
         delta_f = DFunc.gradient(f)( *(Xi.tolist()) )
         delta_f_mod = delta_f[::-1] * np.array([1, -1])
-        tang_f = delta * delta_f_mod / np.linalg.norm(delta_f) # vecteur tangent de départ
+        tang_f = delta * delta_f_mod / npy.linalg.norm(delta_f) # vecteur tangent de départ
 
         #   2.2.2. Computing Xf
         Xf = Xi + tang_f
@@ -228,18 +227,18 @@ display_contour(
 )
 """
 
-level_curve()
+#level_curve()
 
 #3 CONSECUTIFS AVEC 1, 2, 3!!!!!!!!
 
-"""
-import numpy
-a = numpy.mgrid[-5:6:1, -5:6:1]
-b = numpy.empty((11, 11, 1))
-for ix in range(11):
-    for iy in range(11):
-        pass
-print(a)
-#print(b)
-"""
 
+
+
+
+x_range = (-5, 6)
+x_step  = 1
+y_range = (-5, 6)
+y_step  = 1
+
+lin_array = npy.mgrid[x_range[0] : x_range[1] : x_step , y_range[0] : y_range[1] : y_step]
+lin_array = lin_array.transpose(1, 2, 0)
