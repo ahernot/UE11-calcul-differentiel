@@ -87,7 +87,7 @@ class GeomFunctions():
 
 
 DFunc = DiffFunctions()
-
+GFunc = GeomFunctions()
 
 
 
@@ -219,13 +219,14 @@ def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or 
 
     return contour
 
-
+"""
 display_contour(
     f1,
     x=numpy.linspace(-1.0, 1.0, 100),
     y=numpy.linspace(-1.0, 1.0, 100),
     levels=10  # 10 levels, automatically selected
 )
+"""
 
 level_curve()
 
