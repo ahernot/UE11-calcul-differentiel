@@ -179,7 +179,7 @@ def check_intersection(segment_1_1:tuple, segment_1_2:tuple, segment_2_1:tuple, 
     x = ((x_1 * delta_1 - y_1) - (x_3 * delta_2 - y_3)) / (delta_1 - delta_2) # résolution analytique
 
     #   Condition for intersection of the SEGMENTS
-    if x_1 <= x <= x_2 and x_3 <= x <= x_4:
+    if x >= max(x_1, x_3) and x <= min(x_2, x_4): # if x_1 <= x <= x_2 and x_3 <= x <= x_4:
         #y = delta_1 * (x - x_1) + y_1
         #return x, y
         return True

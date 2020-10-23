@@ -189,7 +189,11 @@ def check_intersection(segment_1_1:tuple, segment_1_2:tuple, segment_2_1:tuple, 
 
         #   Parallel and overlapping
         if y0_1 == y0_2:
-            return True
+
+            #   careful if distinct segments!!!!!!!!!!!!!! TO FINISH
+            if x_2 <= x_3:
+                return True
+            return False
 
         #   Parallel and distinct
         else: #statement not needed
