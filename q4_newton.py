@@ -94,7 +94,7 @@ GFunc = GeomFunctions()
 
 
 #   FUNCTIONS
-def newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N, debug:bool=False) -> np.ndarray:
+def newton_anatole(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N, debug:bool=False) -> np.ndarray:
 
     """
     This function solves the equation F(x,y) = 0 around (x0,y0) using the Newton algorithm.
@@ -127,7 +127,7 @@ def newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N, debug:bool=Fa
         try: jacF_inv = npy.linalg.inv( jacF( *(X0.tolist()) ) )
         except npy.linalg.linalg.LinAlgError: print('Error encountered: the JacF matrix is singular.')
 
-        #   4.2. xxx (F returns a np.ndarray type)
+        #   4.2. Dot product between jacF and F(X0)
         F_dot = npy.dot( jacF_inv, F( *(X0.tolist()) ) )
 
         #   4.3. Computing the new X point
@@ -151,6 +151,51 @@ def newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N, debug:bool=Fa
     raise ValueError(f'No convergence in {N} steps.')
 
 
+def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
+
+    """
+    This function solves the equation F(x,y) = 0 around (x0,y0) using the Newton algorithm.
+
+    :param F: The function to solve for — it must necessarily have a multi-dimensional image in a np.ndarray type
+    :param x0: The initial x-axis coordinate
+    :param y0: The initial y-axis coordinate
+    :param eps: The acceptable precision of the algorithm
+    :param N: The maximum number of iterations (will raise an error if exceeded)
+
+    :returns: The solution to the equation F(x,y) = 0, to a precision of eps
+    """
+
+    #   0. Troubleshooting types (ugly)
+    x0, y0 = float(x0), float(y0)
+
+    #   1. Defining the X0 point
+    X0 = np.array([x0, y0])
+
+    #   2. Generating the jacobian matrix of F (n-dimensional derivative)
+    jacF = DFunc.jacobian(F)
+
+    #   3. Running the method in a loop to refine the calculation
+    for iter_counter in range(N):
+
+        #   3.1. Inverting F's jacobian matrix
+        try: jacF_inv = npy.linalg.inv( jacF( *(X0.tolist()) ) )
+        except npy.linalg.linalg.LinAlgError: raise ValueError('The function to solve for has got a singular jacobian matrix.')
+
+        #   3.2. Dot product between jacF and F(X0)
+        F_dot = npy.dot( jacF_inv, F( *(X0.tolist()) ) )
+
+        #   3.3. Computing the new X point
+        X = X0 - F_dot
+
+        #   3.4. Exiting the function once the desired precision is reached
+        if npy.linalg.norm( X - X0 ) <= eps:
+            return tuple(X.tolist())
+
+        #   3.5. Performing end-of-loop actions
+        X0 = X.copy()
+
+    #   4. Raising an error when no solution is found and the max number of iterations is exceeded
+    raise ValueError(f'No convergence in {N} steps.')
 
 
 
