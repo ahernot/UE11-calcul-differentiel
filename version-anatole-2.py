@@ -58,6 +58,20 @@ class GeomFunctions():
         lin_array = npy.mgrid[x_range[0] : x_range[1] : x_step , y_range[0] : y_range[1] : y_step]
         return lin_array.transpose(1, 2, 0)
 
+    
+    def display_contour_inline(self, f:Callable, x:float, y:float, levels):
+        X, Y = np.meshgrid(x, y)
+        Z = f(X, Y)
+
+        #fig, ax = plt.subplots()
+        contour_set = plt.contour(X, Y, Z, colors="grey", linestyles="dashed", levels=levels)
+        #ax.clabel(contour_set)
+
+        plt.grid(True)
+        plt.xlabel("$x$") 
+        plt.ylabel("$y$")
+        #plt.gca().set_aspect("equal")
+
 
 
 DFunc = DiffFunctions()
@@ -129,7 +143,6 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
 
 # Generating a grid to apply the function to
 lin_array = GFunc.linarray_2d((-0.75, 0.75), (-0.75, 0.75), (0.2, 0.2))#0.05, 0.05))
-print(lin_array.shape)
 
 def get_F(f:Callable, level:float = 0.0, offset:float = 0.0) -> Callable:
     def F(x: float or int, y: float or int) -> np.ndarray:
@@ -142,7 +155,13 @@ plt.figure()
 plt.xlim(-1, 1)
 plt.ylim(-1, 1)
 
-"""
+
+GFunc.display_contour(
+    f1, 
+    x=np.linspace(-1.0, 1.0, 100), 
+    y=np.linspace(-1.0, 1.0, 100), 
+    levels=10 # 10 levels, automatically selected
+)
 #   Varying the seed point
 x_list = []
 y_list = []
@@ -158,7 +177,7 @@ for line in lin_array:
             except: continue
 plt.scatter(x_list, y_list)
 plt.show()
-"""
+
 """
 #   Varying offsets
 x_list = []
