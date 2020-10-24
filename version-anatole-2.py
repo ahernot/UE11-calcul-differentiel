@@ -150,7 +150,7 @@ def get_F(f:Callable, level:float = 0.0, offset:float = 0.0) -> Callable:
     return F
 
 
-
+"""
 plt.figure()
 plt.xlim(-1, 1)
 plt.ylim(-1, 1)
@@ -162,6 +162,7 @@ GFunc.display_contour_inline(
     y=np.linspace(-1.0, 1.0, 100), 
     levels=10 # 10 levels, automatically selected
 )
+"""
 
 """
 ##   Varying the seed point
@@ -206,5 +207,158 @@ for offset in npy.linspace(0., 1., 20):
     except: continue
 
 plt.scatter(x_list, y_list, c='blue') # plotting the results
+plt.show()
+"""
+
+
+
+
+
+def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or int=0.1, eps: float or int=eps, N: int=100) -> np.ndarray:
+
+    #   1. Initialising the contour
+    contour = npy.empty((2, N))
+    contour[:, 0] = np.array([x0, y0])
+
+    #   2.1. Initialising the loop's variables
+    xi, yi = x0, y0
+
+    #   2.2. Looping
+    for index in range(1, N):
+
+        #   2.2.0. Defining the F conditioning function
+        def F(x, y):
+            condition = np.sqrt((x - xi)**2 + (y - yi)**2) - delta # intersection between the circle and the level line
+            return np.array([f(x, y) - c, condition])
+
+        #   2.2.1. Computing a tangent vector to the curve
+        delta_f = DFunc.gradient(f)( xi, yi )
+        delta_f_mod = delta_f[::-1] * np.array([1, -1])
+        tang_f = delta * delta_f_mod / npy.linalg.norm(delta_f)
+
+        #   2.2.2. Computing Xf (in order to get the right intersection)
+        xf = xi + tang_f[0]
+        yf = yi + tang_f[1]
+
+        #   2.2.3. Finding the nearest suitable intersection using Newton's method
+        xi, yi = Newton(F, xf, yf, eps, N)
+        #try: xi, yi = Newton(F, xf, yf, eps, N)
+        #except: break
+
+        #   2.2.4. Adding the point to the contour
+        contour[:, index] = np.array([xi, yi])
+
+    return contour
+
+"""
+c = 0.8
+F = get_F(f1, level=0.8)
+x0, y0 = Newton(F, 0.8, 0.8)
+contour = level_curve(f1, x0, y0)
+
+plt.figure()
+plt.xlim(-1, 1)
+plt.ylim(-1, 1)
+
+GFunc.display_contour_inline(
+    f1, 
+    x=np.linspace(-1.0, 1.0, 100), 
+    y=np.linspace(-1.0, 1.0, 100), 
+    levels=10 # 10 levels, automatically selected
+)
+
+
+plt.scatter(contour[0].tolist(), contour[1].tolist())
+plt.show()
+"""
+
+
+
+
+
+
+# From https://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
+
+def ccw(A:tuple or list or np.ndarray, B:tuple or list or np.ndarray, C:tuple or list or np.ndarray):
+    return (C[1]-A[1]) * (B[0]-A[0]) > (B[1]-A[1]) * (C[0]-A[0])
+
+def check_intersection(A1:tuple or list or np.ndarray, A2:tuple or list or np.ndarray, B1:tuple or list or np.ndarray, B2:tuple or list or np.ndarray):
+    return ccw(A1, B1, B2) != ccw(A2, B1, B2) and ccw(A1, A2, B1) != ccw(A1, A2, B2)
+
+
+
+def level_curve_2(f: Callable, x0: float or int, y0: float or int, delta:float or int=0.1, eps: float or int=eps, N: int=100, max_iter:int=10**4) -> np.ndarray:
+
+    #   1. Initialising the contour
+    contour_list = []# = npy.empty((2, N))
+    contour_list.append([x0, y0])
+
+    #   2.1. Initialising the loop's variables
+    xi, yi = x0, y0
+    index = 1
+
+    #   2.2. Looping
+    while True:
+
+        #   2.2.0. Defining the F conditioning function
+        def F(x, y):
+            condition = np.sqrt((x - xi)**2 + (y - yi)**2) - delta # intersection between the circle and the level line
+            return np.array([f(x, y) - c, condition])
+
+        #   2.2.1. Computing a tangent vector to the curve
+        delta_f = DFunc.gradient(f)( xi, yi )
+        delta_f_mod = delta_f[::-1] * np.array([1, -1])
+        tang_f = delta * delta_f_mod / npy.linalg.norm(delta_f)
+
+        #   2.2.2. Computing Xf (in order to get the right intersection)
+        xf = xi + tang_f[0]
+        yf = yi + tang_f[1]
+
+        #   2.2.3. Finding the nearest suitable intersection using Newton's method
+        xi, yi = Newton(F, xf, yf, eps, N)
+
+        #   2.2.4. Adding the point to the contour
+        contour_list.append([xi, yi])
+
+        #   2.2.5 Checking for an intersection between the first segment and the last one calculated
+        if index > 1:
+            intersects = check_intersection(*contour_list[0:2], *contour_list[-2:])
+
+            if intersects:
+                return np.array(contour_list).transpose(1, 0)
+
+        #   2.2.6. Breaking the loop after a set number of iterations
+        if index >= max_iter:
+            break
+
+        #   2.2.7. End-of-loop actions
+        index += 1
+
+    #   4. Raising an error (when the max number of iterations is exceeded)
+    raise ValueError(f'Could not find endpoint of the level curve after {max_iter} steps. Lower the calculation resolution or increase max_iter.')
+
+"""
+plt.figure()
+plt.xlim(-1, 1)
+plt.ylim(-1, 1)
+
+#   Initialising for the level_curve_2 function, using f1
+c = 0.8
+F = get_F(f1, level=0.8)
+x0, y0 = Newton(F, 0.8, 0.8)
+
+#   Running the level_curve_2 function
+contour = level_curve_2(f1, x0, y0)
+
+#   Reference display
+GFunc.display_contour_inline(
+    f1, 
+    x=np.linspace(-1.0, 1.0, 100), 
+    y=np.linspace(-1.0, 1.0, 100), 
+    levels=10 # 10 levels, automatically selected
+)
+
+#   Plotting the results
+plt.plot(contour[0], contour[1], c='blue')
 plt.show()
 """
