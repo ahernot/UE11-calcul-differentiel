@@ -1,7 +1,7 @@
 #   THIRD-PARTY LIBRARIES
 from typing import Callable
 
-import numpy as npy # importing the NumPy functions which are not overwritten by AutoGrad.NumPy
+import numpy as npy # importing the numpy functions which are not overwritten by autograd.numpy (and thus are otherwise missing)
 
 import autograd
 import autograd.numpy as np
@@ -36,11 +36,26 @@ class DiffFunctions():
             return np.array([ j(f, 0)(x, y) , j(f, 1)(x, y) ]) .T
         return J_f
 
-
-
 class GeomFunctions():
 
+    def linarray_2d(x_range:tuple, y_range:tuple, steps:tuple) -> np.ndarray:
+        """
+        This function returns a grid of 2D points in range [x_start, x_stop) and [y_start, y_stop).
+
+        :param x_range: The x-axis range of the grid [x_start, x_stop)
+        :param y_range: The y-axis range of the grid [y_start, y_stop)
+        :param steps: The step length on each axis (x_step, y_step)
+
+        :returns: The grid of points
+
+        """
+        x_step, y_step = steps
+        lin_array = npy.mgrid[x_range[0] : x_range[1] : x_step , y_range[0] : y_range[1] : y_step]
+        return lin_array.transpose(1, 2, 0)
+
+
     def check_intersection(self, segment_1_1: tuple, segment_1_2: tuple, segment_2_1: tuple, segment_2_2: tuple) -> float or None:
+        # DOESN'T WORK FOR VERTICAL SEGMENTS
 
         #   Unpacking the variables for the first segment
         x_1, y_1 = segment_1_1
@@ -83,8 +98,6 @@ class GeomFunctions():
             return True
 
         return False
-
-
 
 DFunc = DiffFunctions()
 GFunc = GeomFunctions()
@@ -150,9 +163,7 @@ def newton_anatole(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N, debug
     #   3. Raising an error when no solution is found and the max number of iterations is exceeded
     raise ValueError(f'No convergence in {N} steps.')
 
-
 def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
-
     """
     This function solves the equation F(x,y) = 0 around (x0,y0) using the Newton algorithm.
 
@@ -178,8 +189,10 @@ def Newton(F:Callable, x0:float, y0:float, eps:float=eps, N:int=N) -> tuple:
     for iter_counter in range(N):
 
         #   3.1. Inverting F's jacobian matrix
-        try: jacF_inv = npy.linalg.inv( jacF( *(X0.tolist()) ) )
-        except npy.linalg.linalg.LinAlgError: raise ValueError('The function to solve for has got a singular jacobian matrix.')
+        try:
+            jacF_inv = npy.linalg.inv( jacF( *(X0.tolist()) ) )
+        except npy.linalg.linalg.LinAlgError:
+            raise ValueError('The function to solve for has got a singular jacobian matrix.')
 
         #   3.2. Dot product between jacF and F(X0)
         F_dot = npy.dot( jacF_inv, F( *(X0.tolist()) ) )
@@ -212,7 +225,7 @@ def F(x: float or int, y: float or int) -> np.ndarray:
     return np.array([ f1(x, y) - c , x - y ])
 
 
-val = newton(F, 0.8, 0.8)
+val = Newton(F, 0.8, 0.8)
 print(val)
 
 
@@ -280,10 +293,10 @@ display_contour(
 
 
 
+
+
 x_range = (-5, 6)
 x_step  = 1
 y_range = (-5, 6)
 y_step  = 1
 
-lin_array = npy.mgrid[x_range[0] : x_range[1] : x_step , y_range[0] : y_range[1] : y_step]
-lin_array = lin_array.transpose(1, 2, 0)
