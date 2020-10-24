@@ -73,7 +73,7 @@ class GeomFunctions():
         #plt.gca().set_aspect("equal")
 
 
-
+#   Loading the auxiliary classes for easy use
 DFunc = DiffFunctions()
 GFunc = GeomFunctions()
 
@@ -156,39 +156,55 @@ plt.xlim(-1, 1)
 plt.ylim(-1, 1)
 
 
-GFunc.display_contour(
+GFunc.display_contour_inline(
     f1, 
     x=np.linspace(-1.0, 1.0, 100), 
     y=np.linspace(-1.0, 1.0, 100), 
     levels=10 # 10 levels, automatically selected
 )
-#   Varying the seed point
-x_list = []
-y_list = []
+
+"""
+##   Varying the seed point
+x_list, y_list = [], [] # results
+xp_list, yp_list = [], [] # seed points
+
 F = get_F(f1, level=0.8)
 # very ugly because Newton isn't vectorized
 for line in lin_array:
     for col in lin_array:
         for point in col:
+
+            #   Adding the seed points
+            xp_list.append(point.tolist()[0])
+            yp_list.append(point.tolist()[1])
+
+            #   Adding the results (if available)
             try:
                 val = Newton(F, *(point.tolist()))
                 x_list.append(val[0])
                 y_list.append(val[1])    
             except: continue
-plt.scatter(x_list, y_list)
+ 
+plt.scatter(xp_list, yp_list, c='red', marker='x', linewidths=0.5) # plotting the seed points
+plt.scatter(x_list, y_list, c='blue') # plotting the results
 plt.show()
+"""
 
 """
 #   Varying offsets
-x_list = []
-y_list = []
+x_list, y_list = [], [] # results
+
 for offset in npy.linspace(0., 1., 20):
+    #   Calculating F with the given offset
     F = get_F(f1, level=0.8, offset=offset)
+
+    #   Adding the results (if available)
     try:
         val = Newton(F, 0.8, 0.8, N=100)
         x_list.append(val[0])
         y_list.append(val[1])    
     except: continue
-plt.scatter(x_list, y_list)
+
+plt.scatter(x_list, y_list, c='blue') # plotting the results
 plt.show()
 """
