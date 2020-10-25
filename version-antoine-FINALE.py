@@ -50,7 +50,7 @@ def J(f):
 
 #Parameters
 N = 100
-eps = 10**(-3) #A justifier avec fin Calcul diff II (nb flottants & erreurs)
+eps = 10**(-7) #A justifier avec fin Calcul diff II (nb flottants & erreurs)
 
 #Task 1
 def Newton(F, x0, y0, eps=eps, N=N):
@@ -137,6 +137,7 @@ xi, yi = tabTest[0, 0], tabTest[1, 0]
 tabX, tabY = NewtonVisual(F1, xi, yi)[0, :], NewtonVisual(F1, xi, yi)[1, :]
 plt.plot(tabX, tabY, 'o-')
 plt.legend(loc='best')
+plt.title('Newton with f1 (level = 0.8 and y = x)', fontsize=15)
 plt.show()
 
 #Second test
@@ -155,6 +156,7 @@ for i in range(1, np.shape(tabTest)[1] ):
     plt.plot(tabX, tabY, 'o-')
 
 plt.legend(loc='best')
+plt.title('Newton with f1 (level = 0.8 and y = x)', fontsize=15)
 plt.show()
 
 #---> with F1_bis (c = 0.8 and 2x1 = x2)
@@ -178,6 +180,7 @@ for i in range( np.shape(tabTest)[1] ):
     plt.plot(tabX, tabY, 'o-')
 
 plt.legend(loc='best')
+plt.title('Newton with f1 (level = 0.8 and y = 2x)', fontsize=15)
 plt.show()
 
 #---> with F1_bis_bis (c = 1 and x1**2 = x2)
@@ -202,6 +205,7 @@ for i in range( np.shape(tabTest)[1] ):
     plt.plot(tabX, tabY, 'o-')
 
 plt.legend(loc='best')
+plt.title('Newton with f1 (level = 1 and y = x²)', fontsize=15)
 plt.show()
 
 #---> with F2 (c = 0.125 and x1 = 1)
@@ -226,6 +230,7 @@ for i in range( np.shape(tabTest)[1] ):
     plt.plot(tabX, tabY, 'o-')
 
 plt.legend(loc='best')
+plt.title('Newton with f2 (level = 0.125 and x = 1)', fontsize=15)
 plt.show()
 
 #Task 3
