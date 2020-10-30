@@ -362,3 +362,96 @@ GFunc.display_contour_inline(
 plt.plot(contour[0], contour[1], c='blue')
 plt.show()
 """
+
+def gamma(t:np.ndarray, P1:tuple or np.ndarray, P2:tuple or np.ndarray, u1:tuple or np.ndarray, u2:tuple or np.ndarray) -> np.ndarray:
+    """
+    This function generates a polynomial interpolation between two points in a 2D plane.
+
+    :param t: The interpolated curve's normalized parameter
+    :param P1: The first point tuple
+    :param P2: The second point tuple
+    :param u1: The first derivative vector
+    :param u2: The second derivative vector
+
+    :returns: The interpolated points' array
+    """
+
+    #   1. Unpacking the variables for easier processing
+    u11, u12 = u1
+    u21, u22 = u2
+    x1, y1 = P1
+    x2, y2 = P2
+
+    #   2. Calculating the determinant of the (u1, u2) couple
+    denom = (u11 * u22) - (u12 * u21)
+
+    #   3.1. Using the second-degree polynomial interpolation method when possible 
+    if not np.isclose(denom, 0):
+        #   3.1.1. Calculating the values of k1 and k2
+        k1 = 2 * ((y2 - y1) * u21) - ((x2 - x1) * u22) / denom
+        k2 = 2 * ((x2 - x1) * u12) - ((y2 - y1) * u11) / denom
+
+        #   3.1.2. Calculating the explicit values of the a, b, c, d, e, f parameters
+        a = x1
+        b = k1 * u11
+        c = k2 * u21 + x1 - x2
+        d = y1
+        e = k1 * u12
+        f = k2 * u22 + y1 - y2
+
+        #   3.1.3. Calculating the values of the x, y variables
+        x = a + b * t + c * t**2
+        y = d + e * t + f * t**2
+
+    #   3.2. Switching to a linear interpolation method (ignoring the derivative vectors) if u1 and u2 are parallel vectors
+    else:
+        #   3.2.1. Calculating the explicit values of the a, b, c, d parameters
+        a = x1
+        b = x2 - x1
+        c = y1
+        d = y2 - y1
+        
+        #   3.2.2. Calculating the values of the x, y variables
+        x = a + b * t
+        y = c + d * t
+
+    #   4. Concatenating the results into a single coordinates array
+    points_interpolated = np.empty((2, t.shape[0]))
+    points_interpolated[0, :] = x
+    points_interpolated[1, :] = y
+    
+    return points_interpolated
+
+
+#   Initialising the plot
+plt.figure()
+plt.xlim(-1, 6)
+plt.ylim(-3, 4)
+
+#   Defining the points
+P1 = (0, 0)
+P2 = (5, 0)
+
+#   Defining the derivatives
+u1 = (1, 1)
+u2 = (2, -3)
+
+#   Plotting the points and derivative unit vectors
+u1_norm = np.linalg.norm(u1)
+u2_norm = np.linalg.norm(u2)
+plt.plot([P1[0], P1[0] + u1[0]/u1_norm], [P1[1], P1[1] + u1[1]/u1_norm], c='gray')
+plt.plot([P2[0], P2[0] + u2[0]/u2_norm], [P2[1], P2[1] + u2[1]/u2_norm], c='gray')
+plt.scatter(*P1, c='red')
+plt.scatter(*P2, c='red')
+
+#   Generating an array of discrete normalized values to calculate the interpolation results for
+t = np.linspace(0, 1, 30)
+
+#   Running the gamma function
+points = gamma(t, P1, P2, u1, u2)
+print(points)
+
+#   Plotting the results
+
+plt.plot(points[0], points[1], c='blue')
+plt.show()
