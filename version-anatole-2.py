@@ -215,6 +215,18 @@ plt.show()
 
 
 def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or int=0.1, eps: float or int=eps, N: int=100) -> np.ndarray:
+    """
+    This function calculates a level curve of a function, with N steps.
+
+    :param f: The function to calculate for
+    :param x0: The initial x-axis coordinate
+    :param y0: The initial y-axis coordinate
+    :param delta: The step size for the calculation
+    :param eps: The acceptable precision of the algorithm
+    :param N: The maximum number of iterations (Newton resolution algorithm) and of steps
+
+    :returns: The array of points making up the discrete calculation of the level curve
+    """
 
     #   1. Initialising the contour
     contour = npy.empty((2, N))
@@ -288,6 +300,19 @@ def check_intersection(A1:tuple or list or np.ndarray, A2:tuple or list or np.nd
 
 
 def level_curve_2(f: Callable, x0: float or int, y0: float or int, delta:float or int=0.1, eps: float or int=eps, N: int=100, max_iter:int=10**4) -> np.ndarray:
+    """
+    This function automatically calculates a level curve of a function.
+
+    :param f: The function to calculate for
+    :param x0: The initial x-axis coordinate
+    :param y0: The initial y-axis coordinate
+    :param delta: The step size for the calculation
+    :param eps: The acceptable precision of the algorithm
+    :param N: The maximum number of iterations for the Newton resolution algorithm
+    :param max_iter: The maximum number of steps
+
+    :returns: The array of points making up the discrete calculation of the level curve
+    """
 
     #   1. Initialising the contour
     contour_list = []# = npy.empty((2, N))
@@ -422,7 +447,7 @@ def gamma(t:np.ndarray, P1:tuple or np.ndarray, P2:tuple or np.ndarray, u1:tuple
     
     return points_interpolated
 
-
+"""
 #   Initialising the plot
 plt.figure()
 plt.xlim(-1, 6)
@@ -452,4 +477,100 @@ points = gamma(t, P1, P2, u1, u2)
 
 #   Plotting the results
 plt.plot(points[0], points[1], c='blue')
+plt.show()
+"""
+
+
+
+def level_curve_3(f: Callable, x0: float or int, y0: float or int, delta:float or int=0.1, eps: float or int=eps, N: int=100, max_iter:int=10**4, oversampling:int = 1) -> np.ndarray:
+    """
+    This function automatically calculates a level curve of a function and interpolates-in points to visually refine the output.
+
+    :param f: The function to calculate for
+    :param x0: The initial x-axis coordinate
+    :param y0: The initial y-axis coordinate
+    :param delta: The step size for the calculation
+    :param eps: The acceptable precision of the algorithm
+    :param N: The maximum number of iterations for the Newton resolution algorithm
+    :param max_iter: The maximum number of steps
+    :param oversampling: The number of points to calculate per step (1 for no interpolation)
+
+    :returns: The array of points making up the interpolated discrete calculation of the level curve
+    """
+
+    #   0. Calculating the number of interpolated points to add between each calculated point
+    points_to_oversample = oversampling - 1
+    
+    #   1. Running the basic level_curve function to generate the starting points
+    points_array = level_curve_2(f, x0, y0, delta, eps, N, max_iter)
+
+    #   2. Fast-track return to avoid running empty loops
+    if oversampling == 1: return points_array
+
+    #   3. Generating the final array
+    starting_width = points_array.shape[1]
+    final_width = starting_width + (starting_width - 1) * points_to_oversample
+    final_array = np.empty((2, final_width))
+    final_array[:, -1] = points_array[:, -1]
+    
+    #   4. Filling the final array
+    for point_id in range(starting_width - 1):
+
+        #   4.1. Extracting the bounds for the interpolation
+        point_start = points_array[:, point_id] # P1
+        point_stop = points_array[:, point_id + 1] # P2
+
+        #   4.2. Getting the adjacent points when possible, to calculate the derivatives
+        #   4.2.1. To the left
+        if point_id == 0: point_left = point_start
+        else: point_left = points_array[:, point_id - 1]
+        #   4.2.2. To the right
+        if point_id == starting_width - 2: point_right = point_stop
+        else: point_right = points_array[:, point_id + 2]
+
+        #   4.3.1. Calculating the slopes, to the left and to the right
+        slope_left = (point_stop[1] - point_left[1]) / (point_stop[0] - point_left[0])
+        slope_right = (point_right[1] - point_start[1]) / (point_right[0] - point_start[0])
+        #   4.3.2. Calculating the derivative vectors (non-unit vectors, doesn't matter), to the left and to the right
+        der_start = np.array([1., slope_left])
+        der_stop = np.array([1., slope_right])
+        
+        #   4.4. Generating the array of normalised parameters used to calculate the interpolated points
+        t_array = np.linspace(0, 1, points_to_oversample)
+
+        #   4.5. Calculating the array of interpolated points
+        points_interpolated = gamma(t_array, point_start, point_stop, der_start, der_stop)
+        
+        #   4.6. Adding the calculated points to the final array
+        final_array[:, point_id * oversampling] = point_start
+        final_array[:, point_id * oversampling + 1 : (point_id + 1) * oversampling] = points_interpolated
+
+    return final_array
+
+
+
+plt.figure()
+plt.xlim(-1, 1)
+plt.ylim(-1, 1)
+
+#   Initialising for the level_curve_2 function, using f1
+c = 0.8
+F = get_F(f1, level=0.8)
+x0, y0 = Newton(F, 0.8, 0.8)
+
+#   Running the level_curve_2 function
+contour_old = level_curve_2(f1, x0, y0)
+contour_new = level_curve_3(f1, x0, y0, oversampling = 10)
+
+#   Reference display
+GFunc.display_contour_inline(
+    f1, 
+    x=np.linspace(-1.0, 1.0, 100), 
+    y=np.linspace(-1.0, 1.0, 100), 
+    levels=10 # 10 levels, automatically selected
+)
+
+#   Plotting the results
+plt.plot(contour_old[0], contour_old[1], c='gray')
+plt.plot(contour_new[0], contour_new[1], c='blue')
 plt.show()
