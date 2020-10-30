@@ -388,8 +388,8 @@ def gamma(t:np.ndarray, P1:tuple or np.ndarray, P2:tuple or np.ndarray, u1:tuple
     #   3.1. Using the second-degree polynomial interpolation method when possible 
     if not np.isclose(denom, 0):
         #   3.1.1. Calculating the values of k1 and k2
-        k1 = 2 * (((y2 - y1) * u21) - ((x2 - x1) * u22)) / denom
-        k2 = 2 * (((x2 - x1) * u12) - ((y2 - y1) * u11)) / denom
+        k1 = 2 * ( ((y2 - y1) * u21) - ((x2 - x1) * u22) ) / denom
+        k2 = 2 * ( ((x2 - x1) * u12) - ((y2 - y1) * u11) ) / denom
 
         #   3.1.2. Calculating the explicit values of the a, b, c, d, e, f parameters
         a = x1
