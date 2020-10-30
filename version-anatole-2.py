@@ -548,12 +548,13 @@ def level_curve_3(f: Callable, x0: float or int, y0: float or int, delta:float o
     return final_array
 
 
-
+"""
+#   Initialising the plot
 plt.figure()
 plt.xlim(-1, 1)
 plt.ylim(-1, 1)
 
-#   Initialising for the level_curve_2 function, using f1
+#   Initialising for the level_curve_3 function, using f1
 c = 0.8
 F = get_F(f1, level=0.8)
 x0, y0 = Newton(F, 0.8, 0.8)
@@ -574,3 +575,4 @@ GFunc.display_contour_inline(
 plt.plot(contour_old[0], contour_old[1], c='gray')
 plt.plot(contour_new[0], contour_new[1], c='blue')
 plt.show()
+"""
