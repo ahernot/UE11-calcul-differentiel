@@ -383,7 +383,7 @@ def gamma(t:np.ndarray, P1:tuple or np.ndarray, P2:tuple or np.ndarray, u1:tuple
     x2, y2 = P2
 
     #   2. Calculating the determinant of the (u1, u2) couple
-    denom = (u11 * u22) - (u12 * u21)
+    denom = (u12 * u21) - (u11 * u22) 
 
     #   3.1. Using the second-degree polynomial interpolation method when possible 
     if not np.isclose(denom, 0):
@@ -449,9 +449,7 @@ t = np.linspace(0, 1, 30)
 
 #   Running the gamma function
 points = gamma(t, P1, P2, u1, u2)
-print(points)
 
 #   Plotting the results
-
 plt.plot(points[0], points[1], c='blue')
 plt.show()
