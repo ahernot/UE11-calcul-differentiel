@@ -262,7 +262,7 @@ def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or 
 
     return contour
 
-"""
+
 c = 0.8
 F = get_F(f1, level=0.8)
 x0, y0 = Newton(F, 0.8, 0.8)
@@ -282,7 +282,7 @@ GFunc.display_contour_inline(
 
 plt.scatter(contour[0].tolist(), contour[1].tolist())
 plt.show()
-"""
+
 
 
 
