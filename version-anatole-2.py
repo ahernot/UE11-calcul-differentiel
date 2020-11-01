@@ -186,6 +186,7 @@ for line in lin_array:
                 y_list.append(val[1])    
             except: continue
  
+plt.title('Newton with $f_1$ (level = 0.8 and $y = x$); various seed points', fontsize=15)
 plt.scatter(xp_list, yp_list, c='red', marker='x', linewidths=0.5) # plotting the seed points
 plt.scatter(x_list, y_list, c='blue') # plotting the results
 plt.show()
@@ -206,6 +207,7 @@ for offset in npy.linspace(0., 1., 20):
         y_list.append(val[1])    
     except: continue
 
+plt.title('Newton with $f_1$ (level = 0.8 and $y = x + α$); fixed seed point $P_0 = (0.8, 0.8)$', fontsize=15)
 plt.scatter(x_list, y_list, c='blue') # plotting the results
 plt.show()
 """
@@ -263,7 +265,7 @@ def level_curve(f: Callable, x0: float or int, y0: float or int, level: float or
 
     return contour
 
-
+"""
 c = 0.8
 F = get_F(f1, level=c)
 x0, y0 = Newton(F, 0.8, 0.8)
@@ -283,6 +285,7 @@ GFunc.display_contour_inline(
 
 plt.scatter(contour[0].tolist(), contour[1].tolist())
 plt.show()
+"""
 
 
 
