@@ -214,13 +214,14 @@ plt.show()
 
 
 
-def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or int=0.1, eps: float or int=eps, N: int=100) -> np.ndarray:
+def level_curve(f: Callable, x0: float or int, y0: float or int, level: float or int=c, delta:float or int=0.1, eps: float or int=eps, N: int=100) -> np.ndarray:
     """
     This function calculates a level curve of a function, with N steps.
 
     :param f: The function to calculate for
     :param x0: The initial x-axis coordinate
     :param y0: The initial y-axis coordinate
+    :param level: The level to calculate the curve for
     :param delta: The step size for the calculation
     :param eps: The acceptable precision of the algorithm
     :param N: The maximum number of iterations (Newton resolution algorithm) and of steps
@@ -241,7 +242,7 @@ def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or 
         #   2.2.0. Defining the F conditioning function
         def F(x, y):
             condition = np.sqrt((x - xi)**2 + (y - yi)**2) - delta # intersection between the circle and the level line
-            return np.array([f(x, y) - c, condition])
+            return np.array([f(x, y) - level, condition])
 
         #   2.2.1. Computing a tangent vector to the curve
         delta_f = DFunc.gradient(f)( xi, yi )
@@ -264,9 +265,9 @@ def level_curve(f: Callable, x0: float or int, y0: float or int, delta:float or 
 
 
 c = 0.8
-F = get_F(f1, level=0.8)
+F = get_F(f1, level=c)
 x0, y0 = Newton(F, 0.8, 0.8)
-contour = level_curve(f1, x0, y0)
+contour = level_curve(f1, x0, y0, level=c)
 
 plt.figure()
 plt.xlim(-1, 1)
